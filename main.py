@@ -7,15 +7,7 @@ import matplotlib.pyplot as plt
 # 1. Load Data
 # ==============================
 
-data =  pd.DataFrame({
-    "sender": ["A","B","C","D","A","F","G"],
-    "receiver": ["B","C","A","E","F","G","A"],
-    "amount": [5000,5000,5000,2000,7000,3000,3000],
-    "time": ["10:00","10:05","10:10","12:00","13:00","13:05","13:10"],
-    "device": ["D1","D2","D3","D4","D1","D5","D6"],
-    "ip": ["192.168.1.1","192.168.1.2","192.168.1.3","192.168.1.4",
-           "192.168.1.1","192.168.1.5","192.168.1.6"]
-})
+data = pd.read_csv("transactions.csv")
 print("\nTransaction Data:\n")
 print(data)
 
