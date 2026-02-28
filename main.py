@@ -1,3 +1,4 @@
+
 import pandas as pd
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -6,12 +7,20 @@ import matplotlib.pyplot as plt
 # 1. Load Data
 # ==============================
 
-data = pd.read_csv("transactions.csv")
+data =  pd.DataFrame({
+    "sender": ["A","B","C","D","A","F","G"],
+    "receiver": ["B","C","A","E","F","G","A"],
+    "amount": [5000,5000,5000,2000,7000,3000,3000],
+    "time": ["10:00","10:05","10:10","12:00","13:00","13:05","13:10"],
+    "device": ["D1","D2","D3","D4","D1","D5","D6"],
+    "ip": ["192.168.1.1","192.168.1.2","192.168.1.3","192.168.1.4",
+           "192.168.1.1","192.168.1.5","192.168.1.6"]
+})
 print("\nTransaction Data:\n")
 print(data)
 
 # ==============================
-# 2. Create Graph
+# 2. Create Directed Graph
 # ==============================
 
 G = nx.DiGraph()
@@ -20,7 +29,95 @@ for index, row in data.iterrows():
     G.add_edge(row['sender'], row['receiver'], amount=row['amount'])
 
 # ==============================
-# 3. Suspicious Pattern Detection
+# 3. Visualize Graph
+# ==============================
+
+plt.figure(figsize=(8,6))
+pos = nx.spring_layout(G)
+nx.draw(G, pos, with_labels=True, node_size=3000)
+plt.title("Transaction Network Graph")
+plt.show()
+
+print()
+print()
+print()
+
+
+#================================
+#barchart
+#================================
+
+total_sent = data.groupby("sender")["amount"].sum()
+
+total_sent.plot(kind="bar")
+plt.title("Total Amount Sent by Each Account")
+plt.ylabel("Amount")
+plt.show()
+
+print()
+print()
+print()
+
+#==============================
+#indegree and outdegree
+#==============================
+
+out_degree = data["sender"].value_counts()
+in_degree = data["receiver"].value_counts()
+
+out_degree.plot(kind="bar")
+plt.title("Number of Transactions Sent")
+plt.show()
+
+print()
+print()
+print()
+
+#==============================
+#time graph
+#==============================
+
+data["time"] = pd.to_datetime(data["time"])
+data.groupby("time")["amount"].sum().plot()
+plt.title("Transaction Amount Over Time")
+plt.show()
+
+print()
+print()
+print()
+
+
+#================================
+#risk score graph
+#================================
+
+accounts = list(risk_score.keys())
+scores = list(risk_score.values())
+
+plt.bar(accounts, scores)
+plt.title("Risk Score per Account")
+plt.ylabel("Risk Score")
+plt.show()
+
+print()
+print()
+print()
+
+#===============================
+#highlight suspicious graph
+#==============================
+
+colors = ["red" if risk_score[node] > 50 else "green" for node in G.nodes()]
+nx.draw(G, with_labels=True, node_color=colors)
+plt.show()
+
+print()
+print()
+print()
+ 
+
+# ==============================
+# 4. Suspicious Pattern Detection
 # ==============================
 
 print("\n--- Suspicious Activity Report ---\n")
@@ -31,13 +128,13 @@ risk_score = {}
 for node in G.nodes():
     risk_score[node] = 0
 
-# Rule 1: Multiple outgoing transfers
+# Rule 1: High Outgoing Transactions
 for node in G.nodes():
     if G.out_degree(node) >= 2:
         print(f"{node} sends money to multiple accounts")
         risk_score[node] += 20
 
-# Rule 2: Circular money flow
+# Rule 2: Detect Cycles (Circular Money Flow)
 cycles = list(nx.simple_cycles(G))
 
 if cycles:
@@ -47,7 +144,7 @@ if cycles:
         for account in cycle:
             risk_score[account] += 30
 
-# Rule 3: Shared devices
+# Rule 3: Shared Devices
 device_map = {}
 
 for index, row in data.iterrows():
@@ -66,12 +163,10 @@ for device, users in device_map.items():
             risk_score[user] += 25
 
 # ==============================
-# 4. Risk Classification
+# 5. Final Risk Classification
 # ==============================
 
 print("\n--- Risk Scores ---\n")
-
-results = []
 
 for account, score in risk_score.items():
     if score <= 30:
@@ -80,58 +175,5 @@ for account, score in risk_score.items():
         level = "Medium Risk"
     else:
         level = "High Risk"
-
+    
     print(f"Account {account}: Score = {score} → {level}")
-
-    results.append([account, score, level])
-
-# ==============================
-# 5. Save Report to Excel
-# ==============================
-
-report = pd.DataFrame(results, columns=["Account", "Risk Score", "Risk Level"])
-report.to_excel("fraud_report.xlsx", index=False)
-
-print("\n✅ Fraud report saved as fraud_report.xlsx")
-
-# ==============================
-# 6. Graph Visualization with Colors
-# ==============================
-
-color_map = []
-
-for node in G.nodes():
-    if risk_score[node] > 60:
-        color_map.append("red")        # High risk
-    elif risk_score[node] > 30:
-        color_map.append("orange")     # Medium risk
-    else:
-        color_map.append("lightgreen") # Low risk
-
-plt.figure(figsize=(8,6))
-pos = nx.spring_layout(G)
-
-nx.draw(
-    G,
-    pos,
-    with_labels=True,
-    node_size=3000,
-    node_color=color_map,
-    arrows=True
-)
-
-plt.title("Transaction Network (Red = High Risk)")
-plt.show()
-
-# ==============================
-# 7. Fraud Alert Summary
-# ==============================
-
-high_risk = [acc for acc, score in risk_score.items() if score > 60]
-
-if high_risk:
-    print("\n🚨 HIGH RISK ACCOUNTS DETECTED 🚨")
-    for acc in high_risk:
-        print(">>", acc)
-else:
-    print("\nNo high-risk accounts detected.")
