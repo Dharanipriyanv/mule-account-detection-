@@ -43,3 +43,21 @@ It analyzes transaction patterns to identify:
 ✔ Suspicious Account Highlighting  
 ✔ Transaction Volume Analysis  
 ✔ Time-based Transaction Analysis  
+
+---
+
+## 📁 Project Structure
+
+```
+mule-account-detection/
+│
+├── main.py                # Main program file
+├── transactions.csv       # Sample transaction dataset
+├── requirements.txt       # Project dependencies
+├── README.md              # Project documentation
+├── .gitignore             # Ignored files
+└── output/
+    ├── network_graph.png
+    ├── risk_score.png
+    └── suspicious_accounts.png
+```
