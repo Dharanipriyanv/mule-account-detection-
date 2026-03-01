@@ -1,49 +1,51 @@
-# Mule Account Detection Using Graph Analysis
+Mule Account Detection System 🚨
+📌 Project Overview
 
-## 📌 Project Overview
-This project detects suspicious mule accounts using graph-based transaction analysis.
+This project detects suspicious mule accounts in a transaction network using graph analysis and rule-based risk scoring.
 
-Fraud networks often involve circular money transfers and shared devices. This system identifies suspicious patterns and assigns risk scores.
+It analyzes transaction patterns to identify:
 
-## 🚀 Features
-- Graph-based transaction visualization
-- Circular transaction detection
-- Shared device detection
-- Risk scoring system
-- Fraud pattern identification
+Circular money flow
 
-## 🛠 Technologies Used
-- Python
-- NetworkX
-- Pandas
-- Matplotlib
+Accounts sending money to multiple users
 
-## 📊 How It Works
-1. Loads transaction data
-2. Builds a transaction graph
-3. Detects suspicious patterns
-4. Calculates risk score
-5. Classifies accounts
+Shared device usage
 
-## ▶️ Run the Project
+High-risk transaction behavior
 
-Install dependencies:
+🧠 Technologies Used
 
-pip install -r requirements.txt
+Python
 
-Run:
+pandas
 
-python main.py
+networkx
 
-## 📷 Sample Output
-(Add graph screenshot here)
+matplotlib
 
-## 🎯 Future Improvements
-- Machine learning fraud detection
-- Real-time monitoring
-- Web dashboard
+⚙️ How It Works
 
-## 👨‍💻 Author
-Dharanipriyan V
-Arunsandron S.R
-Jerlin J
+Loads transaction dataset
+
+Builds a directed transaction graph
+
+Detects suspicious patterns:
+
+Circular transaction cycles
+
+High outgoing transactions
+
+Shared device usage
+
+Assigns risk scores to accounts
+
+Visualizes transaction network and risk levels
+
+📊 Features
+
+✔ Transaction Network Graph
+✔ Circular Transaction Detection
+✔ Risk Scoring System
+✔ Suspicious Account Highlighting
+✔ Transaction Volume Analysis
+✔ Time-based Transaction Analysis
